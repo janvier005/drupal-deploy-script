@@ -1,6 +1,6 @@
 # drupal-deploy-script
 
---- This a beta, please use it only for testing purposes ---
+*This a beta, please use it only for testing purposes*
 
 This is script is able to setup debian or ubuntu server to host new or exsting Drupal 9 website.
 
