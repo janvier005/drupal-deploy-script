@@ -148,7 +148,7 @@ if [ ! -d ~/.oh-my-zsh/custom/plugins/command-time ]; then
   git clone https://github.com/popstas/zsh-command-time.git ~/.oh-my-zsh/custom/plugins/command-time
 fi;
 
-awk -i inplace ' { gsub("plugins=(git)","plugins=(git zsh-autosuggestions zsh-syntax-highlighting command-time)");print } ' .zshrc
+awk -i inplace ' { gsub("plugins=\\(git\\)","plugins=(git zsh-autosuggestions zsh-syntax-highlighting command-time)");print } ' .zshrc
 
 # PHP packages installs
 echo '# PHP packages installs';
