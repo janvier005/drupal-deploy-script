@@ -241,7 +241,7 @@ if [[ "$EXISTING_WEBSITE" == "no" ]]; then
   composer create-project drupal/recommended-project:9.x "$HOST_NAME" -n
   cd /var/www/html/"$HOST_NAME"
   composer require drupal/dotenv -n
-  composer require drupal/drush -n
+  composer require drush/drush -n
   cd /var/www/html/"$HOST_NAME"/web/sites/default
   cp default.settings.php settings.php
 
