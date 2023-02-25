@@ -45,8 +45,8 @@ read -p "Use Certbot to activate SSL ? (host name DNS must already be configured
 USE_CERTBOT=${USE_CERTBOT:-'yes'}
 
 if [[ "$USE_CERTBOT" == "yes" ]]; then
-  read -p "Certbot email address [none@none.com]: " -r CERTBOT_USER_EMAIL=none@none.com
-  CERTBOT_USER_EMAIL=none@none.com=${CERTBOT_USER_EMAIL:-'none@none.com'}
+  read -p "Certbot email address [none@none.com]: " -r CERTBOT_USER_EMAIL
+  CERTBOT_USER_EMAIL=${CERTBOT_USER_EMAIL:-'none@none.com'}
 fi;
 
 read -p "Is database already existing ? [no]: " -r DB_EXISTING
@@ -79,7 +79,7 @@ if [[ "$GIT_SSH_REPO" == "yes" ]]; then
   read -p "Is Github key already existing ? [yes]: " -r GIT_EXISTING_KEY
   GIT_EXISTING_KEY=${GIT_EXISTING_KEY:-'yes'}
 
-  read -p "Is Github key already existing ? [id_rsa]: " -r GIT_KEY_NAME
+  read -p "Enter key name [id_rsa]: " -r GIT_KEY_NAME
   GIT_KEY_NAME=${GIT_KEY_NAME:-'id_rsa'}
 
   read -p "Enter your GIT repository name [git@git]: " -r GIT_NAME
@@ -100,6 +100,13 @@ fi;
 read -p "Is website already existing ? (drives drush cex and drush dcdes) [no]: " -r EXISTING_WEBSITE
 EXISTING_WEBSITE=${EXISTING_WEBSITE:-'no'}
 
+echo '*******************************************'
+echo ''
+echo "Press a key to start installation"
+echo ''
+read -r REPLY
+echo ''
+
 # Init
 echo '# Init';
 apt-get update && apt-get dist-upgrade -y && apt-get autoremove -y
@@ -110,6 +117,7 @@ echo '#oh my zsh to work faster';
 apt install zsh zip unzip git fonts-powerline -y
 rm -Rf /root/.oh-my-zsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+chsh -s "$(which zsh)" "$(whoami)"
 awk -i inplace ' { gsub("robbyrussell","agnoster");print } ' .zshrc
 git clone https://github.com/zsh-users/zsh-autosuggestions "${ZSH_CUSTOM:-~/.oh-my-zsh/custom}"/plugins/zsh-autosuggestions
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "${ZSH_CUSTOM:-~/.oh-my-zsh/custom}"/plugins/zsh-syntax-highlighting
@@ -197,7 +205,9 @@ fi;
 echo '# Installing or starting existing Drupal';
 if [[ "$EXISTING_WEBSITE" == "no" ]]; then
   cd /var/www/html/
-  composer create-project drupal/recommended-project "$HOST_NAME"
+  cd /var/www/html/"$HOST_NAME"
+  rm -Rf *
+  composer create-project drupal/recommended-project "$HOST_NAME" -n
   cd /var/www/html/"$HOST_NAME"
   composer require drupal/dotenv
   composer require drupal/drush
