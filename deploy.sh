@@ -238,7 +238,7 @@ if [[ "$EXISTING_WEBSITE" == "no" ]]; then
   cd /var/www/html/"$HOST_NAME"
   rm -Rf *
   cd ..
-  composer create-project drupal/recommended-project "$HOST_NAME" -n
+  composer create-project drupal/recommended-project:9.x "$HOST_NAME" -n
   cd /var/www/html/"$HOST_NAME"
   composer require drupal/dotenv -n
   composer require drupal/drush -n
