@@ -229,14 +229,11 @@ if [ -d .git ]; then
 else
   git config --global user.email "$GIT_EMAIL"
   git config --global user.name "$GIT_USER"
-  git init
-  git remote add origin "$GIT_NAME"
-  git branch -M main
 fi;
 
 # Installing or starting existing Drupal
-echo '# Installing or starting existing Drupal';
 if [[ "$EXISTING_WEBSITE" == "no" ]]; then
+  echo '# Installing new Drupal';
   cd /var/www/html/
   cd /var/www/html/"$HOST_NAME"
   rm -Rf *
@@ -291,6 +288,9 @@ echo "$VAR" >> settings.php
 fi
 
 cd /var/www/html/"$HOST_NAME"
+git init
+git remote add origin "$GIT_NAME"
+git branch -M main
 git config --global --add safe.directory /var/www/html/"$HOST_NAME"
 git add -A
 git commit -am 'init drupal'
@@ -337,9 +337,9 @@ if [[ "$DB_EXISTING" == "no" ]]; then
   mysql -e "FLUSH PRIVILEGES;"
 fi;
 
-# Installing or starting existing Drupal
-echo '# Installing or starting existing Drupal';
+# Installing existing Drupal
 if [[ "$EXISTING_WEBSITE" == "yes" ]]; then
+  echo '# Installing existing Drupal';
   cd /var/www/html/"$HOST_NAME"/
   composer install -n
   composer update -n
