@@ -115,6 +115,7 @@ else
   echo '';
 fi;
 
+echo '';
 read -p "Is website already existing ? (drives drush cex and drush dcdes) [no]: " -r EXISTING_WEBSITE
 EXISTING_WEBSITE=${EXISTING_WEBSITE:-'no'}
 
@@ -245,23 +246,24 @@ if [[ "$EXISTING_WEBSITE" == "no" ]]; then
   cd /var/www/html/"$HOST_NAME"/web/sites/default
   cp default.settings.php settings.php
 
-read -r -d '' VAR << EOM
-<?php
+VAR=$(cat <<EOM
+  <?php
 
-error_reporting(E_ALL);
-ini_set('display_errors', TRUE);
-ini_set('display_startup_errors', TRUE);
+  error_reporting(E_ALL);
+  ini_set('display_errors', TRUE);
+  ini_set('display_startup_errors', TRUE);
 
-\$conf['error_level'] = 2;
-\$config['system.logging']['error_level'] = 'verbose';
+  \$conf['error_level'] = 2;
+  \$config['system.logging']['error_level'] = 'verbose';
 
-use Symfony\Component\Dotenv\Dotenv;
+  use Symfony\Component\Dotenv\Dotenv;
 
-(new Dotenv())->bootEnv(DRUPAL_ROOT . '/../.env');
+  (new Dotenv())->bootEnv(DRUPAL_ROOT . '/../.env');
 EOM
+)
 awk -i inplace -v VAR="$VAR" ' { gsub("<?php",VAR);print } ' settings.php
 
-read -r -d '' VAR << EOM
+VAR=$(cat <<EOM
 \$databases['default']['default'] = array (
   'database' => \$_ENV['DB_NAME'],
   'username' => \$_ENV['DB_USER'],
@@ -284,6 +286,7 @@ if (getenv('TRUSTED_HOST_PATTERN')) {
   \$settings['trusted_host_patterns'] = array(getenv('TRUSTED_HOST_PATTERN'));
 }
 EOM
+)
 echo "$VAR" >> settings.php
 fi
 
