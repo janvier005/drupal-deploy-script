@@ -32,62 +32,80 @@ echo "Press a key to start configuration"
 echo ''
 read -r REPLY
 
+echo ''
 read -p "Enter host name [none.com]: " -r HOST_NAME
 HOST_NAME=${HOST_NAME:-'none.com'}
 
+echo ''
 read -p "Primary website environment type (prod,dev,staging) [dev]: " -r PRI_ENV_TYPE
 PRI_ENV_TYPE=${PRI_ENV_TYPE:-'dev'}
 
+echo ''
 read -p "Enter PHP version to use [$PHP_VERSION]: " -r PHP_VERSION
 PHP_VERSION=${PHP_VERSION:-'8.1'}
 
+echo ''
 read -p "Use Certbot to activate SSL ? (host name DNS must already be configured) [yes]: " -r USE_CERTBOT
 USE_CERTBOT=${USE_CERTBOT:-'yes'}
 
 if [[ "$USE_CERTBOT" == "yes" ]]; then
+  echo ''
   read -p "Certbot email address [none@none.com]: " -r CERTBOT_USER_EMAIL
   CERTBOT_USER_EMAIL=${CERTBOT_USER_EMAIL:-'none@none.com'}
 fi;
 
+echo ''
 read -p "Is database already existing ? [no]: " -r DB_EXISTING
 DB_EXISTING=${DB_EXISTING:-'no'}
 
 if [[ "$DB_EXISTING" == "no" ]]; then
+  echo ''
   read -p "Enter database host [localhost]: " -r DB_HOST
   DB_HOST=${DB_HOST:-'localhost'}
 
+  echo ''
   read -p "Enter database server admin name [root]: " -r DB_SERVER_ROOT_USER
   DB_SERVER_ROOT_USER=${DB_SERVER_ROOT_USER:-'root'}
 
+  echo ''
   read -p "Enter database server admin acount password ('none' keyword for local non secured server) [none]: " -r DB_SERVER_ROOT_PASSWORD
   DB_SERVER_ROOT_PASSWORD=${DB_SERVER_ROOT_PASSWORD:-'none'}
 
+  echo ''
   read -p "Enter database name [dru_db_prod1]: " -r DB_NAME
   DB_NAME=${DB_NAME:-'dru_db_prod1'}
 
+  echo ''
   read -p "Enter database user name [drupal_db]: " -r DB_USER
   DB_USER=${DB_USER:-'drupal_db'}
 
+  echo ''
   read -p "Enter database password [PassWord2023!]: " -r DB_PASSWORD
   DB_PASSWORD=${DB_PASSWORD:-'PassWord2023!'}
 fi;
 
+echo ''
 read -p "Is Github repository already existing ? [yes]: " -r GIT_SSH_REPO
 GIT_SSH_REPO=${GIT_SSH_REPO:-'yes'}
 
 if [[ "$GIT_SSH_REPO" == "yes" ]]; then
+  echo ''
   read -p "Is Github key already existing ? [yes]: " -r GIT_EXISTING_KEY
   GIT_EXISTING_KEY=${GIT_EXISTING_KEY:-'yes'}
 
+  echo ''
   read -p "Enter key name [id_rsa]: " -r GIT_KEY_NAME
   GIT_KEY_NAME=${GIT_KEY_NAME:-'id_rsa'}
 
+  echo ''
   read -p "Enter your GIT repository name [git@git]: " -r GIT_NAME
   GIT_NAME=${GIT_NAME:-'git@git'}
 
+  echo ''
   read -p "Enter your GIT user name [git]: " -r GIT_USER
   GIT_USER=${GIT_USER:-'git'}
 
+  echo ''
   read -p "Enter your GIT email [none@none.com]: " -r GIT_EMAIL
   GIT_EMAIL=${GIT_EMAIL:-'none@none.com'}
 else
@@ -183,6 +201,14 @@ fi;
 echo ''
 echo '---------------------------------------------'
 echo ''
+if [[ "$GIT_EXISTING_KEY" == "no" ]]; then
+  echo "New key named $GIT_KEY_NAME.pub"
+else
+  echo "Existing key named $GIT_KEY_NAME.pub"
+fi;
+echo ''
+echo '---------------------------------------------'
+echo ''
 cat "$GIT_KEY_NAME".pub
 echo ''
 echo '---------------------------------------------'
@@ -214,10 +240,11 @@ if [[ "$EXISTING_WEBSITE" == "no" ]]; then
   cd /var/www/html/
   cd /var/www/html/"$HOST_NAME"
   rm -Rf *
+  cd ..
   composer create-project drupal/recommended-project "$HOST_NAME" -n
   cd /var/www/html/"$HOST_NAME"
-  composer require drupal/dotenv
-  composer require drupal/drush
+  composer require drupal/dotenv -n
+  composer require drupal/drush -n
   cd /var/www/html/"$HOST_NAME"/web/sites/default
   cp default.settings.php settings.php
 
@@ -315,7 +342,7 @@ echo '# Installing or starting existing Drupal';
 if [[ "$EXISTING_WEBSITE" == "yes" ]]; then
   cd /var/www/html/"$HOST_NAME"/
   composer install -n
-  composer update
+  composer update -n
   drush cr
   drush si --existing-config -y
   drush cr
