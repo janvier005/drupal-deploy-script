@@ -100,6 +100,7 @@ fi;
 read -p "Is website already existing ? (drives drush cex and drush dcdes) [no]: " -r EXISTING_WEBSITE
 EXISTING_WEBSITE=${EXISTING_WEBSITE:-'no'}
 
+echo ''
 echo '*******************************************'
 echo ''
 echo "Press a key to start installation"
@@ -119,9 +120,15 @@ rm -Rf /root/.oh-my-zsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 chsh -s "$(which zsh)" "$(whoami)"
 awk -i inplace ' { gsub("robbyrussell","agnoster");print } ' .zshrc
-git clone https://github.com/zsh-users/zsh-autosuggestions "${ZSH_CUSTOM:-~/.oh-my-zsh/custom}"/plugins/zsh-autosuggestions
-git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "${ZSH_CUSTOM:-~/.oh-my-zsh/custom}"/plugins/zsh-syntax-highlighting
-git clone https://github.com/popstas/zsh-command-time.git "${ZSH_CUSTOM:-~/.oh-my-zsh/custom}"/plugins/command-time
+if [ ! -d ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions ]; then
+  git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+fi;
+if [ ! -d ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting ]; then
+  git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+fi;
+if [ ! -d ~/.oh-my-zsh/custom/plugins/command-time ]; then
+  git clone https://github.com/popstas/zsh-command-time.git ~/.oh-my-zsh/custom/plugins/command-time
+fi;
 
 awk -i inplace ' { gsub("plugins=(git)","plugins=(git zsh-autosuggestions zsh-syntax-highlighting command-time)");print } ' .zshrc
 
