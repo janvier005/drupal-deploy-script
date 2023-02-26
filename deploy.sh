@@ -297,7 +297,7 @@ git branch -M main
 git config --global --add safe.directory /var/www/html/"$HOST_NAME"
 git add -A
 git commit -am 'init drupal'
-git push --set-upstream origin main
+git push --set-upstream -f origin main
 
 # DotEnv stuffs
 echo '# DotEnv stuffs';
