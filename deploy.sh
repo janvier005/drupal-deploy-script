@@ -363,8 +363,8 @@ chmod 775 "$HOST_NAME" -R
 
 # Managing Apache
 echo '# Managing Apache';
-awk -i inplace -v HOST_NAME="$HOST_NAME" ' { gsub("HOSTNAME_VAR",HOST_NAME);print } ' 001-drupal-vhost.txt
-mv 001-drupal-vhost.txt /etc/apache2/sites-available/001-"$HOST_NAME".conf
+#awk -i inplace -v HOST_NAME="$HOST_NAME" ' { gsub("HOSTNAME_VAR",HOST_NAME);print } ' 001-drupal-vhost.txt
+#mv 001-drupal-vhost.txt /etc/apache2/sites-available/001-"$HOST_NAME".conf
 
 echo "<VirtualHost *:80>" >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
 echo "" >>  /etc/apache2/sites-available/001-"$HOST_NAME".conf
