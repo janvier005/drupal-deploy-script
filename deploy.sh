@@ -377,9 +377,9 @@ echo "# value is not decisive as it is used as a last resort host regardless." >
 echo "# However, you must set it for any further virtual host explicitly." >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
 echo "#ServerName www.example.com" >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
 echo "" >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
-echo "ServerName ${HOSTNAME_VAR}" >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
+echo "ServerName $HOSTNAME_VAR" >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
 echo "ServerAdmin webmaster@localhost" >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
-echo "DocumentRoot /var/www/html/${HOSTNAME_VAR}/web" >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
+echo "DocumentRoot /var/www/html/$HOSTNAME_VAR/web" >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
 echo "" >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
 echo "# Available loglevels: trace8, ..., trace1, debug, info, notice, warn," >>  /etc/apache2/sites-available/001-"$HOST_NAME".conf
 echo "# error, crit, alert, emerg." >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
@@ -393,7 +393,7 @@ echo "" >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
 echo "<FilesMatch \.php$>" >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
 echo "" >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
 echo "# For Apache version 2.4.10 and above, use SetHandler to run PHP as a fastCGI process server" >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
-echo SetHandler "proxy:unix:/run/php/php${PHP_VERSION}-fpm.sock|fcgi://localhost" >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
+echo SetHandler "proxy:unix:/run/php/php$PHP_VERSION-fpm.sock|fcgi://localhost" >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
 echo "</FilesMatch>" >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
 echo "" >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
 echo "# For most configuration files from conf-available/, which are" >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
@@ -403,7 +403,7 @@ echo "# following line enables the CGI configuration for this host only" >> /etc
 echo "# after it has been globally disabled with 'a2disconf'." >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
 echo "#Include conf-available/serve-cgi-bin.conf" >>  /etc/apache2/sites-available/001-"$HOST_NAME".conf
 echo "RewriteEngine on" >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
-echo "RewriteCond %{SERVER_NAME} =${HOSTNAME_VAR}" >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
+echo "RewriteCond %{SERVER_NAME} =$HOSTNAME_VAR" >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
 echo "RewriteRule ^ https://%{SERVER_NAME}%{REQUEST_URI} [END,NE,R=permanent]" >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
 echo "</VirtualHost>" >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
 echo "" >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
