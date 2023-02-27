@@ -377,9 +377,9 @@ echo "# value is not decisive as it is used as a last resort host regardless." >
 echo "# However, you must set it for any further virtual host explicitly." >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
 echo "#ServerName www.example.com" >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
 echo "" >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
-echo "ServerName $HOSTNAME_VAR" >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
+echo "ServerName $HOST_NAME" >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
 echo "ServerAdmin webmaster@localhost" >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
-echo "DocumentRoot /var/www/html/$HOSTNAME_VAR/web" >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
+echo "DocumentRoot /var/www/html/$HOST_NAME/web" >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
 echo "" >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
 echo "# Available loglevels: trace8, ..., trace1, debug, info, notice, warn," >>  /etc/apache2/sites-available/001-"$HOST_NAME".conf
 echo "# error, crit, alert, emerg." >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
@@ -387,8 +387,8 @@ echo "# It is also possible to configure the loglevel for particular" >> /etc/ap
 echo "# modules, e.g." >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
 echo "#LogLevel info ssl:warn" >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
 echo "" >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
-echo "ErrorLog ${APACHE_LOG_DIR}/error-${APACHE_LOG_DIR}.log" >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
-echo "CustomLog ${APACHE_LOG_DIR}/access-${APACHE_LOG_DIR}.log combined" >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
+echo "ErrorLog \${APACHE_LOG_DIR}/error-$HOST_NAME.log" >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
+echo "CustomLog \${APACHE_LOG_DIR}/access-$HOST_NAME.log combined" >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
 echo "" >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
 echo "<FilesMatch \.php$>" >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
 echo "" >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
@@ -403,7 +403,7 @@ echo "# following line enables the CGI configuration for this host only" >> /etc
 echo "# after it has been globally disabled with 'a2disconf'." >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
 echo "#Include conf-available/serve-cgi-bin.conf" >>  /etc/apache2/sites-available/001-"$HOST_NAME".conf
 echo "RewriteEngine on" >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
-echo "RewriteCond %{SERVER_NAME} =$HOSTNAME_VAR" >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
+echo "RewriteCond %{SERVER_NAME} =$HOST_NAME" >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
 echo "RewriteRule ^ https://%{SERVER_NAME}%{REQUEST_URI} [END,NE,R=permanent]" >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
 echo "</VirtualHost>" >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
 echo "" >> /etc/apache2/sites-available/001-"$HOST_NAME".conf
