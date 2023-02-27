@@ -261,7 +261,7 @@ VAR=$(cat <<EOM
   (new Dotenv())->bootEnv(DRUPAL_ROOT . '/../.env');
 EOM
 )
-awk -i inplace -v VAR="$VAR" ' { gsub("<?php",VAR);print } ' settings.php
+awk -i inplace -v VAR="$VAR" ' { gsub("<\\?php",VAR);print } ' settings.php
 
 VAR=$(cat <<EOM
 \$databases['default']['default'] = array (
