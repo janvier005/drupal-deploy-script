@@ -340,7 +340,7 @@ fi;
 composer install -n
 composer update -n
 composer require drupal/dotenv -n
-composer require drush/drush -n
+composer require drush/drush
 
 # Installing existing Drupal
 if [[ "$EXISTING_WEBSITE" == "yes" ]]; then
