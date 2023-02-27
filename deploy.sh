@@ -1,8 +1,7 @@
 #!/bin/bash
 set -e
 
-# shellcheck disable=SC2034
-COMPOSER_ALLOW_SUPERUSER=1
+export COMPOSER_ALLOW_SUPERUSER=1
 CONFIG_VAR_FILENAME=config.var
 
 INTERACTIVE_MODE=yes
