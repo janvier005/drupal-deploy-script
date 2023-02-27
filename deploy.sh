@@ -244,6 +244,29 @@ if [[ "$EXISTING_WEBSITE" == "no" ]]; then
   cd /var/www/html/"$HOST_NAME"/web/sites/default
   cp default.settings.php settings.php
 
+  #init composer for Drupal
+  echo '#init composer for Drupal';
+  sed -i "s@\"minimum-stability\": \"stable\"@\"minimum-stability\": \"dev\"@" composer.json
+  composer install -n
+  composer update -n
+  composer require drupal/dotenv -n
+  composer require drush/drush -n
+  composer require drush/config_sync -n
+
+  # DotEnv stuffs
+  echo '# DotEnv stuffs';
+  echo "APP_ENV=${PRI_ENV_TYPE}" >> .env
+  echo "" >> .env
+  echo "DB_NAME=${DB_NAME}" >> .env
+  echo "DB_USER=${DB_USER}" >> .env
+  echo "DB_PASSWORD=${DB_PASSWORD}" >> .env
+  echo "DB_PREFIX=" >> .env
+  echo "DB_HOST=${DB_HOST}" >> .env
+  echo "DB_PORT=3306" >> .env
+  echo "" >> .env
+  echo "# optional" >> .env
+  echo "TRUSTED_HOST_PATTERN='.*'" >> .env
+
 VAR=$(cat <<EOM
   <?php
 
@@ -259,14 +282,10 @@ VAR=$(cat <<EOM
   (new Dotenv())->bootEnv(DRUPAL_ROOT . '/../.env');
 EOM
 )
-awk -i inplace -v VAR="$VAR" ' { gsub("<\\?php",VAR);print } ' settings.php
+  awk -i inplace -v VAR="$VAR" ' { gsub("<\\?php",VAR);print } ' settings.php
 
-HASH_SALT=$(drush php-eval 'echo \Drupal\Component\Utility\Crypt::randomBytesBase64(55) . "\n";' | xargs )
-#VAR="\settings['hash_salt'] = \'$HASH_SALT\'; //ok"
-#awk -i inplace -v VAR="$VAR" ' { gsub("$settings\['hash_salt'\][[:blank:]]=[[:blank:]]'';",VAR);print } ' settings.php
-sed -i "s/\$settings\['hash_salt'\] = '';/\$settings['hash_salt'] = '$HASH_SALT';/g" settings.php
-
-
+  HASH_SALT=$(drush php-eval 'echo \Drupal\Component\Utility\Crypt::randomBytesBase64(55) . "\n";' | xargs )
+  sed -i "s@\$settings\['hash_salt'] = ''@\$settings[\'hash_salt\'] = $HASH_SALT@" settings.php
 
 VAR=$(cat <<EOM
 \$databases['default']['default'] = array (
@@ -291,31 +310,50 @@ if (getenv('TRUSTED_HOST_PATTERN')) {
 }
 EOM
 )
-echo "$VAR" >> settings.php
+  echo "$VAR" >> settings.php
+
+  cd /var/www/html/"$HOST_NAME"
+  git init
+  git remote add origin "$GIT_NAME"
+  git branch -M main
+  git config --global --add safe.directory /var/www/html/"$HOST_NAME"
+  git add -A
+  git commit -am 'init drupal'
+  git push --set-upstream -f origin main
+else
+  cd /var/www/html/"$HOST_NAME"
+  git init
+  git remote add origin "$GIT_NAME"
+  git branch -M main
+  git config --global --add safe.directory /var/www/html/"$HOST_NAME"
+  git pull
+  git add -A
+  git commit -am 'init drupal'
+  git push --set-upstream origin main
+
+  # DotEnv stuffs
+  echo '# DotEnv stuffs';
+  echo "APP_ENV=${PRI_ENV_TYPE}" >> .env
+  echo "" >> .env
+  echo "DB_NAME=${DB_NAME}" >> .env
+  echo "DB_USER=${DB_USER}" >> .env
+  echo "DB_PASSWORD=${DB_PASSWORD}" >> .env
+  echo "DB_PREFIX=" >> .env
+  echo "DB_HOST=${DB_HOST}" >> .env
+  echo "DB_PORT=3306" >> .env
+  echo "" >> .env
+  echo "# optional" >> .env
+  echo "TRUSTED_HOST_PATTERN='.*'" >> .env
+
+  #init composer for Drupal
+  echo '#init composer for Drupal';
+  sed -i "s@\"minimum-stability\": \"stable\"@\"minimum-stability\": \"dev\"@" composer.json
+  composer install -n
+  composer update -n
+  composer require drupal/dotenv -n
+  composer require drush/drush -n
+  composer require drush/config_sync -n
 fi
-
-cd /var/www/html/"$HOST_NAME"
-git init
-git remote add origin "$GIT_NAME"
-git branch -M main
-git config --global --add safe.directory /var/www/html/"$HOST_NAME"
-git add -A
-git commit -am 'init drupal'
-git push --set-upstream -f origin main
-
-# DotEnv stuffs
-echo '# DotEnv stuffs';
-echo "APP_ENV=${PRI_ENV_TYPE}" >> .env
-echo "" >> .env
-echo "DB_NAME=${DB_NAME}" >> .env
-echo "DB_USER=${DB_USER}" >> .env
-echo "DB_PASSWORD=${DB_PASSWORD}" >> .env
-echo "DB_PREFIX=" >> .env
-echo "DB_HOST=${DB_HOST}" >> .env
-echo "DB_PORT=3306" >> .env
-echo "" >> .env
-echo "# optional" >> .env
-echo "TRUSTED_HOST_PATTERN='.*'" >> .env
 
 # SQL stuffs
 echo '# SQL stuffs';
@@ -343,11 +381,6 @@ if [[ "$DB_EXISTING" == "no" ]]; then
   fi;
   mysql -e "FLUSH PRIVILEGES;"
 fi;
-
-composer install -n
-composer update -n
-composer require drupal/dotenv -n
-composer require drush/drush
 
 # Installing existing Drupal
 if [[ "$EXISTING_WEBSITE" == "yes" ]]; then
