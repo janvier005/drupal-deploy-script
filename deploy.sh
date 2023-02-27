@@ -261,6 +261,13 @@ EOM
 )
 awk -i inplace -v VAR="$VAR" ' { gsub("<\\?php",VAR);print } ' settings.php
 
+HASH_SALT=$(drush php-eval 'echo \Drupal\Component\Utility\Crypt::randomBytesBase64(55) . "\n";' | xargs )
+#VAR="\settings['hash_salt'] = \'$HASH_SALT\'; //ok"
+#awk -i inplace -v VAR="$VAR" ' { gsub("$settings\['hash_salt'\][[:blank:]]=[[:blank:]]'';",VAR);print } ' settings.php
+sed -i "s/\$settings\['hash_salt'\] = '';/\$settings['hash_salt'] = '$HASH_SALT';/g" settings.php
+
+
+
 VAR=$(cat <<EOM
 \$databases['default']['default'] = array (
   'database' => \$_ENV['DB_NAME'],
