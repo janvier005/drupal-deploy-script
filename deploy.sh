@@ -241,8 +241,6 @@ if [[ "$EXISTING_WEBSITE" == "no" ]]; then
   cd ..
   composer create-project drupal/recommended-project:9.x "$HOST_NAME" -n
   cd /var/www/html/"$HOST_NAME"
-  composer require drupal/dotenv -n
-  composer require drush/drush -n
   cd /var/www/html/"$HOST_NAME"/web/sites/default
   cp default.settings.php settings.php
 
@@ -339,12 +337,15 @@ if [[ "$DB_EXISTING" == "no" ]]; then
   mysql -e "FLUSH PRIVILEGES;"
 fi;
 
+composer install -n
+composer update -n
+composer require drupal/dotenv -n
+composer require drush/drush -n
+
 # Installing existing Drupal
 if [[ "$EXISTING_WEBSITE" == "yes" ]]; then
   echo '# Installing existing Drupal';
   cd /var/www/html/"$HOST_NAME"/
-  composer install -n
-  composer update -n
   drush cr
   drush si --existing-config -y
   drush cr
