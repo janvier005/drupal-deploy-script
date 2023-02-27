@@ -161,7 +161,8 @@ else
   echo '';
   read -p "Name of the file containing variables in the same folder as the deploy script [config.var]: " -r CONFIG_VAR_FILENAME
   CONFIG_VAR_FILENAME=${CONFIG_VAR_FILENAME:-'config.var'}
-  source ./${CONFIG_VAR_FILENAME}
+  # shellcheck disable=SC1090
+  source ./"${CONFIG_VAR_FILENAME}"
 fi;
 
 echo ''
@@ -295,7 +296,7 @@ if [[ "$EXISTING_WEBSITE" == "no" ]]; then
   composer require drupal/dotenv -n
   composer require drush/drush -n
   composer require drupal/config_sync -n
-  drush site-install minimal --db-prefix=dru --db-url=mysql://$DB_USER:$DB_PASSWORD@$DB_HOST/$DB_NAME --site-name=$DRUPAL_SITE_NAME --account-name=$DRUPAL_ADMIN_NAME --account-pass=$DRUPAL_ADMIN_PASS --account-mail=$DRUPAL_ADMIN_EMAIL --site-mail=$DRUPAL_ADMIN_EMAIL --locale=$DRUPAL_LOCALE -y
+  drush site-install minimal --db-prefix=dru --db-url=mysql://"$DB_USER":"$DB_PASSWORD"@"$DB_HOST"/"$DB_NAME" --site-name="$DRUPAL_SITE_NAME" --account-name="$DRUPAL_ADMIN_NAME" --account-pass="$DRUPAL_ADMIN_PASS" --account-mail="$DRUPAL_ADMIN_EMAIL" --site-mail="$DRUPAL_ADMIN_EMAIL" --locale="$DRUPAL_LOCALE" -y
 
   # DotEnv stuffs
 #  echo '# DotEnv stuffs';
