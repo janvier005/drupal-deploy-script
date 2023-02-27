@@ -286,7 +286,7 @@ if (getenv('TRUSTED_HOST_PATTERN')) {
 }
 EOM
 )
-echo "$VAR" >> settings1.php
+echo "$VAR" >> settings.php
 fi
 
 cd /var/www/html/"$HOST_NAME"
