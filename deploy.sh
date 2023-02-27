@@ -253,10 +253,10 @@ VAR=$(cat <<EOM
   ini_set('display_errors', TRUE);
   ini_set('display_startup_errors', TRUE);
 
-  \$conf['error_level'] = 2;
-  \$config['system.logging']['error_level'] = 'verbose';
+  \\\$conf['error_level'] = 2;
+  \\\$config['system.logging']['error_level'] = 'verbose';
 
-  use Symfony\Component\Dotenv\Dotenv;
+  use Symfony\\\Component\\\Dotenv\\\Dotenv;
 
   (new Dotenv())->bootEnv(DRUPAL_ROOT . '/../.env');
 EOM
@@ -271,11 +271,10 @@ VAR=$(cat <<EOM
   'prefix' => \$_ENV['DB_PREFIX'] ?? '',
   'host' => \$_ENV['DB_HOST'],
   'port' => \$_ENV['DB_PORT'],
-  'namespace' => 'Drupal\\mysql\\Driver\\Database\\mysql',
+  'namespace' => 'Drupal\\\mysql\\\Driver\\\Database\\\mysql',
   'driver' => 'mysql',
   'autoload' => 'core/modules/mysql/src/Driver/Database/mysql/',
 );
-
 
 \$settings['config_sync_directory'] = 'config/sync';
 global \$content_directories;
@@ -287,7 +286,7 @@ if (getenv('TRUSTED_HOST_PATTERN')) {
 }
 EOM
 )
-echo "$VAR" >> settings.php
+echo "$VAR" >> settings1.php
 fi
 
 cd /var/www/html/"$HOST_NAME"
