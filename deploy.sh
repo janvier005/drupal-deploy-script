@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+CONFIG_VAR_FILENAME=config.var
+
+INTERACTIVE_MODE=yes
 HOST_NAME=none.com
 PRI_ENV_TYPE=dev
 PHP_VERSION=8.1
@@ -33,91 +36,102 @@ echo ''
 read -r REPLY
 
 echo ''
-read -p "Enter host name [none.com]: " -r HOST_NAME
-HOST_NAME=${HOST_NAME:-'none.com'}
-
-echo ''
-read -p "Primary website environment type (prod,dev,staging) [dev]: " -r PRI_ENV_TYPE
-PRI_ENV_TYPE=${PRI_ENV_TYPE:-'dev'}
-
-echo ''
-read -p "Enter PHP version to use [$PHP_VERSION]: " -r PHP_VERSION
-PHP_VERSION=${PHP_VERSION:-'8.1'}
-
-echo ''
-read -p "Use Certbot to activate SSL ? (host name DNS must already be configured) [yes]: " -r USE_CERTBOT
-USE_CERTBOT=${USE_CERTBOT:-'yes'}
+read -p "Enter in interactive mode ? [yes]: " -r INTERACTIVE_MODE
+INTERACTIVE_MODE=${INTERACTIVE_MODE:-'yes'}
 
 if [[ "$USE_CERTBOT" == "yes" ]]; then
   echo ''
-  read -p "Certbot email address [none@none.com]: " -r CERTBOT_USER_EMAIL
-  CERTBOT_USER_EMAIL=${CERTBOT_USER_EMAIL:-'none@none.com'}
-fi;
-
-echo ''
-read -p "Is database already existing ? [no]: " -r DB_EXISTING
-DB_EXISTING=${DB_EXISTING:-'no'}
-
-if [[ "$DB_EXISTING" == "no" ]]; then
-  echo ''
-  read -p "Enter database host [localhost]: " -r DB_HOST
-  DB_HOST=${DB_HOST:-'localhost'}
+  read -p "Enter host name [none.com]: " -r HOST_NAME
+  HOST_NAME=${HOST_NAME:-'none.com'}
 
   echo ''
-  read -p "Enter database server admin name [root]: " -r DB_SERVER_ROOT_USER
-  DB_SERVER_ROOT_USER=${DB_SERVER_ROOT_USER:-'root'}
+  read -p "Primary website environment type (prod,dev,staging) [dev]: " -r PRI_ENV_TYPE
+  PRI_ENV_TYPE=${PRI_ENV_TYPE:-'dev'}
 
   echo ''
-  read -p "Enter database server admin acount password ('none' keyword for local non secured server) [none]: " -r DB_SERVER_ROOT_PASSWORD
-  DB_SERVER_ROOT_PASSWORD=${DB_SERVER_ROOT_PASSWORD:-'none'}
+  read -p "Enter PHP version to use [$PHP_VERSION]: " -r PHP_VERSION
+  PHP_VERSION=${PHP_VERSION:-'8.1'}
 
   echo ''
-  read -p "Enter database name [dru_db_prod1]: " -r DB_NAME
-  DB_NAME=${DB_NAME:-'dru_db_prod1'}
+  read -p "Use Certbot to activate SSL ? (host name DNS must already be configured) [yes]: " -r USE_CERTBOT
+  USE_CERTBOT=${USE_CERTBOT:-'yes'}
+
+  if [[ "$USE_CERTBOT" == "yes" ]]; then
+    echo ''
+    read -p "Certbot email address [none@none.com]: " -r CERTBOT_USER_EMAIL
+    CERTBOT_USER_EMAIL=${CERTBOT_USER_EMAIL:-'none@none.com'}
+  fi;
 
   echo ''
-  read -p "Enter database user name [drupal_db]: " -r DB_USER
-  DB_USER=${DB_USER:-'drupal_db'}
+  read -p "Is database already existing ? [no]: " -r DB_EXISTING
+  DB_EXISTING=${DB_EXISTING:-'no'}
+
+  if [[ "$DB_EXISTING" == "no" ]]; then
+    echo ''
+    read -p "Enter database host [localhost]: " -r DB_HOST
+    DB_HOST=${DB_HOST:-'localhost'}
+
+    echo ''
+    read -p "Enter database server admin name [root]: " -r DB_SERVER_ROOT_USER
+    DB_SERVER_ROOT_USER=${DB_SERVER_ROOT_USER:-'root'}
+
+    echo ''
+    read -p "Enter database server admin acount password ('none' keyword for local non secured server) [none]: " -r DB_SERVER_ROOT_PASSWORD
+    DB_SERVER_ROOT_PASSWORD=${DB_SERVER_ROOT_PASSWORD:-'none'}
+
+    echo ''
+    read -p "Enter database name [dru_db_prod1]: " -r DB_NAME
+    DB_NAME=${DB_NAME:-'dru_db_prod1'}
+
+    echo ''
+    read -p "Enter database user name [drupal_db]: " -r DB_USER
+    DB_USER=${DB_USER:-'drupal_db'}
+
+    echo ''
+    read -p "Enter database password [PassWord2023!]: " -r DB_PASSWORD
+    DB_PASSWORD=${DB_PASSWORD:-'PassWord2023!'}
+  fi;
 
   echo ''
-  read -p "Enter database password [PassWord2023!]: " -r DB_PASSWORD
-  DB_PASSWORD=${DB_PASSWORD:-'PassWord2023!'}
-fi;
+  read -p "Is Github repository already existing ? [yes]: " -r GIT_SSH_REPO
+  GIT_SSH_REPO=${GIT_SSH_REPO:-'yes'}
 
-echo ''
-read -p "Is Github repository already existing ? [yes]: " -r GIT_SSH_REPO
-GIT_SSH_REPO=${GIT_SSH_REPO:-'yes'}
+  if [[ "$GIT_SSH_REPO" == "yes" ]]; then
+    echo ''
+    read -p "Is Github key already existing ? [yes]: " -r GIT_EXISTING_KEY
+    GIT_EXISTING_KEY=${GIT_EXISTING_KEY:-'yes'}
 
-if [[ "$GIT_SSH_REPO" == "yes" ]]; then
-  echo ''
-  read -p "Is Github key already existing ? [yes]: " -r GIT_EXISTING_KEY
-  GIT_EXISTING_KEY=${GIT_EXISTING_KEY:-'yes'}
+    echo ''
+    read -p "Enter key name [id_rsa]: " -r GIT_KEY_NAME
+    GIT_KEY_NAME=${GIT_KEY_NAME:-'id_rsa'}
 
-  echo ''
-  read -p "Enter key name [id_rsa]: " -r GIT_KEY_NAME
-  GIT_KEY_NAME=${GIT_KEY_NAME:-'id_rsa'}
+    echo ''
+    read -p "Enter your GIT repository name [git@git]: " -r GIT_NAME
+    GIT_NAME=${GIT_NAME:-'git@git'}
 
-  echo ''
-  read -p "Enter your GIT repository name [git@git]: " -r GIT_NAME
-  GIT_NAME=${GIT_NAME:-'git@git'}
+    echo ''
+    read -p "Enter your GIT user name [git]: " -r GIT_USER
+    GIT_USER=${GIT_USER:-'git'}
 
-  echo ''
-  read -p "Enter your GIT user name [git]: " -r GIT_USER
-  GIT_USER=${GIT_USER:-'git'}
+    echo ''
+    read -p "Enter your GIT email [none@none.com]: " -r GIT_EMAIL
+    GIT_EMAIL=${GIT_EMAIL:-'none@none.com'}
+  else
+    echo '';
+    echo 'It is recomended to create a repository to manage Drupal source code ;-)'
+    echo 'You will already be able to do that after having installed everiting through this script';
+    echo '';
+  fi;
 
-  echo ''
-  read -p "Enter your GIT email [none@none.com]: " -r GIT_EMAIL
-  GIT_EMAIL=${GIT_EMAIL:-'none@none.com'}
+  echo '';
+  read -p "Is website already existing ? (drives drush cex and drush dcdes) [no]: " -r EXISTING_WEBSITE
+  EXISTING_WEBSITE=${EXISTING_WEBSITE:-'no'}
 else
   echo '';
-  echo 'It is recomended to create a repository to manage Drupal source code ;-)'
-  echo 'You will already be able to do that after having installed everiting through this script';
-  echo '';
+  read -p "Name of the file containing variables in the same folder as the deploy script [config.var]: " -r CONFIG_VAR_FILENAME
+  CONFIG_VAR_FILENAME=${CONFIG_VAR_FILENAME:-'config.var'}
+  source ./${CONFIG_VAR_FILENAME}
 fi;
-
-echo '';
-read -p "Is website already existing ? (drives drush cex and drush dcdes) [no]: " -r EXISTING_WEBSITE
-EXISTING_WEBSITE=${EXISTING_WEBSITE:-'no'}
 
 echo ''
 echo '*******************************************'
@@ -249,7 +263,7 @@ if [[ "$EXISTING_WEBSITE" == "no" ]]; then
   composer update -n
   composer require drupal/dotenv -n
   composer require drush/drush -n
-  composer require drush/config_sync -n
+  composer require drupal/config_sync -n
 
   # DotEnv stuffs
   echo '# DotEnv stuffs';
@@ -352,7 +366,7 @@ else
   composer update -n
   composer require drupal/dotenv -n
   composer require drush/drush -n
-  composer require drush/config_sync -n
+  composer require drupal/config_sync -n
 fi
 
 # SQL stuffs
