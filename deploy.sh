@@ -39,7 +39,7 @@ echo ''
 read -p "Enter in interactive mode ? [yes]: " -r INTERACTIVE_MODE
 INTERACTIVE_MODE=${INTERACTIVE_MODE:-'yes'}
 
-if [[ "$USE_CERTBOT" == "yes" ]]; then
+if [[ "$INTERACTIVE_MODE" == "yes" ]]; then
   echo ''
   read -p "Enter host name [none.com]: " -r HOST_NAME
   HOST_NAME=${HOST_NAME:-'none.com'}
