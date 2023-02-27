@@ -284,7 +284,7 @@ if [[ "$EXISTING_WEBSITE" == "no" ]]; then
   cd /var/www/html/"$HOST_NAME"
   rm -Rf *
   cd ..
-  composer create-project drupal/recommended-project:9.x "$HOST_NAME" -n
+  composer create-project drupal/recommended-project:9.x "$HOST_NAME"
   cd /var/www/html/"$HOST_NAME"
 
   #init composer for Drupal
@@ -295,7 +295,7 @@ if [[ "$EXISTING_WEBSITE" == "no" ]]; then
   composer require drupal/dotenv -n
   composer require drush/drush -n
   composer require drupal/config_sync -n
-  drush site-install minimal --db-prefix=dru --db-url=mysql://$DB_USER:$DB_PASSWORD@$DB_HOST/$DB_NAME --site-name=$DRUPAL_SITE_NAME --account-name=$DRUPAL_ADMIN_NAME --account-pass=$DRUPAL_ADMIN_PASS --account-mail=$DRUPAL_ADMIN_EMAIL --site-mail=$DRUPAL_ADMIN_EMAIL --locale=$DRUPAL_LOCALE
+  drush site-install minimal --db-prefix=dru --db-url=mysql://$DB_USER:$DB_PASSWORD@$DB_HOST/$DB_NAME --site-name=$DRUPAL_SITE_NAME --account-name=$DRUPAL_ADMIN_NAME --account-pass=$DRUPAL_ADMIN_PASS --account-mail=$DRUPAL_ADMIN_EMAIL --site-mail=$DRUPAL_ADMIN_EMAIL --locale=$DRUPAL_LOCALE -y
 
   # DotEnv stuffs
 #  echo '# DotEnv stuffs';
@@ -310,7 +310,7 @@ if [[ "$EXISTING_WEBSITE" == "no" ]]; then
 #  echo "" >> .env
 #  echo "# optional" >> .env
 #  echo "TRUSTED_HOST_PATTERN='.*'" >> .env
-drush dotenv:init
+drush dotenv:init -y
 
   cd /var/www/html/"$HOST_NAME"/web/sites/default
 #  cp default.settings.php settings.php
