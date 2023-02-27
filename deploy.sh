@@ -295,7 +295,7 @@ if [[ "$EXISTING_WEBSITE" == "no" ]]; then
   composer require drupal/dotenv -n
   composer require drush/drush -n
   composer require drupal/config_sync -n
-  drush site-install commons --db-prefix=dru --db-url=mysql://$DB_USER:$DB_PASSWORD@$DB_HOST/$DB_NAME --site-name=$DRUPAL_SITE_NAME --account-name=$DRUPAL_ADMIN_NAME --account-pass=$DRUPAL_ADMIN_PASS --account-mail=$DRUPAL_ADMIN_EMAIL --site-mail=$DRUPAL_ADMIN_EMAIL --locale=$DRUPAL_LOCALE
+  drush site-install minimal --db-prefix=dru --db-url=mysql://$DB_USER:$DB_PASSWORD@$DB_HOST/$DB_NAME --site-name=$DRUPAL_SITE_NAME --account-name=$DRUPAL_ADMIN_NAME --account-pass=$DRUPAL_ADMIN_PASS --account-mail=$DRUPAL_ADMIN_EMAIL --site-mail=$DRUPAL_ADMIN_EMAIL --locale=$DRUPAL_LOCALE
 
   # DotEnv stuffs
 #  echo '# DotEnv stuffs';
@@ -313,7 +313,7 @@ if [[ "$EXISTING_WEBSITE" == "no" ]]; then
 drush dotenv:init
 
   cd /var/www/html/"$HOST_NAME"/web/sites/default
-  cp default.settings.php settings.php
+#  cp default.settings.php settings.php
 VAR=$(cat <<EOM
   <?php
 
