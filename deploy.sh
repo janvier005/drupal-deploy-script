@@ -241,8 +241,6 @@ if [[ "$EXISTING_WEBSITE" == "no" ]]; then
   cd ..
   composer create-project drupal/recommended-project:9.x "$HOST_NAME" -n
   cd /var/www/html/"$HOST_NAME"
-  cd /var/www/html/"$HOST_NAME"/web/sites/default
-  cp default.settings.php settings.php
 
   #init composer for Drupal
   echo '#init composer for Drupal';
@@ -267,6 +265,8 @@ if [[ "$EXISTING_WEBSITE" == "no" ]]; then
   echo "# optional" >> .env
   echo "TRUSTED_HOST_PATTERN='.*'" >> .env
 
+  cd /var/www/html/"$HOST_NAME"/web/sites/default
+  cp default.settings.php settings.php
 VAR=$(cat <<EOM
   <?php
 
