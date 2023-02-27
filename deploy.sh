@@ -24,7 +24,14 @@ GIT_KEY_NAME=id_rsa
 GIT_NAME=git@git
 GIT_USER=git
 GIT_EMAIL=none@none.com
+
 EXISTING_WEBSITE=no
+
+DRUPAL_SITE_NAME=Drupal démo
+DRUPAL_ADMIN_NAME=Administrateur
+DRUPAL_ADMIN_PASS=Drupal2023!
+DRUPAL_ADMIN_EMAIL=none@none.com
+DRUPAL_LOCALE=fr
 
 echo '';
 echo '*******************************************'
@@ -126,6 +133,30 @@ if [[ "$INTERACTIVE_MODE" == "yes" ]]; then
   echo '';
   read -p "Is website already existing ? (drives drush cex and drush dcdes) [no]: " -r EXISTING_WEBSITE
   EXISTING_WEBSITE=${EXISTING_WEBSITE:-'no'}
+
+  if [[ "$EXISTING_WEBSITE" == "no" ]]; then
+
+    echo ''
+    read -p "Enter Drupal site name [Drupal démo]: " -r DRUPAL_SITE_NAME
+    DRUPAL_SITE_NAME=${DRUPAL_SITE_NAME:-'Drupal démo'}
+
+    echo ''
+    read -p "Enter Drupal admin user name [Administrateur]: " -r DRUPAL_ADMIN_NAME
+    DRUPAL_ADMIN_NAME=${DRUPAL_ADMIN_NAME:-'Administrateur'}
+
+    echo ''
+    read -p "Enter Drupal admin password [Drupal2023!]: " -r DRUPAL_ADMIN_PASS
+    DRUPAL_ADMIN_PASS=${DRUPAL_ADMIN_PASS:-'Drupal2023!'}
+
+    echo ''
+    read -p "Enter Drupal admin email [none@none.com]: " -r DRUPAL_ADMIN_EMAIL
+    DRUPAL_ADMIN_EMAIL=${DRUPAL_ADMIN_EMAIL:-'none@none.com'}
+
+    echo ''
+    read -p "Enter Drupal locale language [fr]: " -r DRUPAL_LOCALE
+    DRUPAL_LOCALE=${DRUPAL_LOCALE:-'fr'}
+
+  fi;
 else
   echo '';
   read -p "Name of the file containing variables in the same folder as the deploy script [config.var]: " -r CONFIG_VAR_FILENAME
@@ -264,20 +295,22 @@ if [[ "$EXISTING_WEBSITE" == "no" ]]; then
   composer require drupal/dotenv -n
   composer require drush/drush -n
   composer require drupal/config_sync -n
+  drush site-install commons --db-prefix=dru --db-url=mysql://$DB_USER:$DB_PASSWORD@$DB_HOST/$DB_NAME --site-name=$DRUPAL_SITE_NAME --account-name=$DRUPAL_ADMIN_NAME --account-pass=$DRUPAL_ADMIN_PASS --account-mail=$DRUPAL_ADMIN_EMAIL --site-mail=$DRUPAL_ADMIN_EMAIL --locale=$DRUPAL_LOCALE
 
   # DotEnv stuffs
-  echo '# DotEnv stuffs';
-  echo "APP_ENV=${PRI_ENV_TYPE}" >> .env
-  echo "" >> .env
-  echo "DB_NAME=${DB_NAME}" >> .env
-  echo "DB_USER=${DB_USER}" >> .env
-  echo "DB_PASSWORD=${DB_PASSWORD}" >> .env
-  echo "DB_PREFIX=" >> .env
-  echo "DB_HOST=${DB_HOST}" >> .env
-  echo "DB_PORT=3306" >> .env
-  echo "" >> .env
-  echo "# optional" >> .env
-  echo "TRUSTED_HOST_PATTERN='.*'" >> .env
+#  echo '# DotEnv stuffs';
+#  echo "APP_ENV=${PRI_ENV_TYPE}" >> .env
+#  echo "" >> .env
+#  echo "DB_NAME=${DB_NAME}" >> .env
+#  echo "DB_USER=${DB_USER}" >> .env
+#  echo "DB_PASSWORD=${DB_PASSWORD}" >> .env
+#  echo "DB_PREFIX=" >> .env
+#  echo "DB_HOST=${DB_HOST}" >> .env
+#  echo "DB_PORT=3306" >> .env
+#  echo "" >> .env
+#  echo "# optional" >> .env
+#  echo "TRUSTED_HOST_PATTERN='.*'" >> .env
+drush dotenv:init
 
   cd /var/www/html/"$HOST_NAME"/web/sites/default
   cp default.settings.php settings.php
@@ -298,8 +331,8 @@ EOM
 )
   awk -i inplace -v VAR="$VAR" ' { gsub("<\\?php",VAR);print } ' settings.php
 
-  HASH_SALT=$(drush php-eval 'echo \Drupal\Component\Utility\Crypt::randomBytesBase64(55) . "\n";' | xargs )
-  sed -i "s@\$settings\['hash_salt'] = ''@\$settings[\'hash_salt\'] = $HASH_SALT@" settings.php
+#  HASH_SALT=$(drush php-eval 'echo \Drupal\Component\Utility\Crypt::randomBytesBase64(55) . "\n";' | xargs )
+#  sed -i "s@\$settings\['hash_salt'] = '';@\$settings[\'hash_salt\'] = $HASH_SALT;@" settings.php
 
 VAR=$(cat <<EOM
 \$databases['default']['default'] = array (

@@ -19,4 +19,11 @@ GIT_KEY_NAME=id_rsa
 GIT_NAME=git@git
 GIT_USER=git
 GIT_EMAIL=none@none.com
+
 EXISTING_WEBSITE=no
+
+DRUPAL_SITE_NAME=Drupal démo
+DRUPAL_ADMIN_NAME=Administrateur
+DRUPAL_ADMIN_PASS=Drupal2023!
+DRUPAL_ADMIN_EMAIL=none@none.com
+DRUPAL_LOCALE=fr
