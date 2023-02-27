@@ -312,6 +312,7 @@ if [[ "$EXISTING_WEBSITE" == "no" ]]; then
 #  echo "" >> .env
 #  echo "# optional" >> .env
 #  echo "TRUSTED_HOST_PATTERN='.*'" >> .env
+drush en dotenv -y
 drush dotenv:init -y
 
   cd /var/www/html/"$HOST_NAME"/web/sites/default
