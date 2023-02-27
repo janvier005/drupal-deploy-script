@@ -22,7 +22,7 @@ GIT_EMAIL=none@none.com
 
 EXISTING_WEBSITE=no
 
-DRUPAL_SITE_NAME=Drupal démo
+DRUPAL_SITE_NAME="Drupal démo"
 DRUPAL_ADMIN_NAME=Administrateur
 DRUPAL_ADMIN_PASS=Drupal2023!
 DRUPAL_ADMIN_EMAIL=none@none.com
